@@ -40,18 +40,14 @@ func setupAdmin() (b *presets.Builder) {
 			return
 		})
 
-	// Регистрация модели Order
-	mb := b.Model(&models.Task{})
+	mb := b.Model(&models.Order{})
 
-	// Настройка списка
-	mb.Listing("ID", "UserID", "Items", "Status", "CreatedAt", "UpdatedAt")
+	mb.Listing("ID", "UserID", "Items", "Status")
 	//ListAll("ID", "UserID", "Items", "Status", "CreatedAt", "UpdatedAt")
 
-	// Настройка редактирования
 	eb := mb.Editing()
 	eb.Only("UserID", "Status", "Items")
 
-	// Кастомизация поля Items
 	eb.Field("Items").
 		ComponentFunc(func(obj interface{}, field *presets.FieldContext, ctx *web.EventContext) HTMLComponent {
 			var itemsStr string

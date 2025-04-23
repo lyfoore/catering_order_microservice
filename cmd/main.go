@@ -10,7 +10,7 @@ import (
 
 func main() {
 	//mockDB := mock.NewMockDB()
-	postgresDB, err := database.NewPostgresDB("host=localhost port=5432 user=postgres password=postgres dbname=mydb sslmode=disable")
+	postgresDB, err := database.NewPostgresDB("host=db port=5432 user=postgres password=postgres dbname=orders sslmode=disable")
 	if err != nil {
 		log.Fatal(err)
 	}

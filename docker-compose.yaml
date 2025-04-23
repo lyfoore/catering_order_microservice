@@ -19,7 +19,7 @@ services:
           - app-network
 
     db:
-        image: postgres:15-alpine
+        image: postgres:17-alpine
         environment:
           - POSTGRES_USER=postgres
           - POSTGRES_PASSWORD=postgres
@@ -33,6 +33,17 @@ services:
           interval: 5s
           timeout: 5s
           retries: 5
+
+    admin:
+      build:
+        context: ./myadmin
+        dockerfile: ./Dockerfile
+      ports:
+        - "9000:9000"
+      depends_on:
+        - order-service
+      networks:
+        - app-network
 
 networks:
     app-network:

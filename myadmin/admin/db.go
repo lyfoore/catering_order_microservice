@@ -7,7 +7,7 @@ import (
 	"gorm.io/gorm/logger"
 )
 
-var dbParamsString = "user=admin password=123 dbname=admin_dev sslmode=disable host=localhost port=6432"
+var dbParamsString = "user=postgres password=postgres dbname=orders sslmode=disable host=db port=5432"
 
 func ConnectDB() (db *gorm.DB) {
 	var err error
@@ -21,7 +21,7 @@ func ConnectDB() (db *gorm.DB) {
 	db.Logger = db.Logger.LogMode(logger.Info)
 
 	// Create data table in the database
-	err = db.AutoMigrate(models.Task{})
+	err = db.AutoMigrate(models.Order{})
 	if err != nil {
 		panic(err)
 	}
