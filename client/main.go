@@ -5,12 +5,14 @@ import (
 	"github.com/lyfoore/order-service/internal/genproto/orders"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"strconv"
 )
 
 func GetOrderGRPC(ctx *gin.Context) {
 	conn, _ := grpc.NewClient("localhost:9090", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	client := orders.NewOrderServiceClient(conn)
-	order, err := client.GetOrder(ctx, &orders.GetOrderRequest{Id: ctx.Param("id")})
+	id, _ := strconv.ParseUint(ctx.Param("id"), 10, 64)
+	order, err := client.GetOrder(ctx, &orders.GetOrderRequest{Id: id})
 	if err != nil {
 		ctx.JSON(500, gin.H{
 			"error": err.Error(),
