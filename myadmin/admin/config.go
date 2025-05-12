@@ -42,11 +42,11 @@ func setupAdmin() (b *presets.Builder) {
 
 	mb := b.Model(&models.Order{})
 
-	mb.Listing("ID", "UserID", "Items", "Status")
+	mb.Listing("ID", "UserID", "Items", "Status", "Message", "Response")
 	//ListAll("ID", "UserID", "Items", "Status", "CreatedAt", "UpdatedAt")
 
 	eb := mb.Editing()
-	eb.Only("UserID", "Status", "Items")
+	eb.Only("UserID", "Status", "Items", "Message", "Response")
 
 	eb.Field("Items").
 		ComponentFunc(func(obj interface{}, field *presets.FieldContext, ctx *web.EventContext) HTMLComponent {

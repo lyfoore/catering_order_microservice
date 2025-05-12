@@ -1,8 +1,11 @@
 package service
 
 import (
+	"context"
+	"github.com/labstack/gommon/log"
 	"github.com/lyfoore/order-service/internal/domain"
 	"github.com/lyfoore/order-service/internal/repository"
+	"github.com/openai/openai-go"
 )
 
 type OrderService struct {
@@ -31,6 +34,14 @@ func (s *OrderService) CreateOrderService(newOrder *domain.Order) (*domain.Order
 		return nil, err
 	}
 
+	go func() {
+		_, err := s.GetResponseFromAI(order)
+		if err != nil {
+			log.Error(err)
+		}
+		log.Print("get response from AI")
+	}()
+
 	return order, nil
 }
 
@@ -50,6 +61,10 @@ func (s *OrderService) UpdateOrderService(updatedOrder *domain.Order) (*domain.O
 		existingOrder.Status = updatedOrder.Status
 	}
 
+	if updatedOrder.Response != "" {
+		existingOrder.Response = updatedOrder.Response
+	}
+
 	if err := s.repo.UpdateOrder(existingOrder); err != nil {
 		return nil, err
 	}
@@ -58,4 +73,26 @@ func (s *OrderService) UpdateOrderService(updatedOrder *domain.Order) (*domain.O
 
 func (s *OrderService) DeleteOrderService(id uint64) error {
 	return s.repo.DeleteOrder(id)
+}
+
+func (s *OrderService) GetResponseFromAI(order *domain.Order) (*domain.Order, error) {
+	client := openai.NewClient()
+	chatCompletion, err := client.Chat.Completions.New(context.TODO(), openai.ChatCompletionNewParams{
+		Messages: []openai.ChatCompletionMessageParamUnion{
+			openai.UserMessage(order.Message),
+		},
+		Model: openai.ChatModelGPT4o,
+	})
+	if err != nil {
+		panic(err.Error())
+	}
+
+	respondedOrder := *order
+	respondedOrder.Response = chatCompletion.Choices[0].Message.Content
+	err = s.repo.UpdateOrder(&respondedOrder)
+	if err != nil {
+		return nil, err
+	}
+
+	return &respondedOrder, nil
 }

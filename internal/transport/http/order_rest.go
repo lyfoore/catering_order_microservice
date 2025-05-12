@@ -56,8 +56,9 @@ func (h *OrderHandler) CreateOrder(ctx *gin.Context) {
 	}
 
 	newOrder := &domain.Order{
-		UserID: request.UserID,
-		Items:  request.Items,
+		UserID:  request.UserID,
+		Items:   request.Items,
+		Message: request.Message,
 	}
 
 	order, err := h.service.CreateOrderService(newOrder)

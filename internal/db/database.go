@@ -8,10 +8,12 @@ import (
 )
 
 type Order struct {
-	ID     uint64        `gorm:"primaryKey;column:id;autoIncrement"`
-	UserID uint64        `gorm:"column:user_id"`
-	Items  pq.Int64Array `gorm:"column:items;type:integer[]"`
-	Status string        `gorm:"column:status"`
+	ID       uint64        `gorm:"primaryKey;column:id;autoIncrement"`
+	UserID   uint64        `gorm:"column:user_id"`
+	Items    pq.Int64Array `gorm:"column:items;type:integer[]"`
+	Status   string        `gorm:"column:status"`
+	Message  string        `gorm:"column:message"`
+	Response string        `gorm:"column:response"`
 }
 
 func (Order) TableName() string {
@@ -37,9 +39,11 @@ func NewPostgresDB(dsn string) (*PostgresDB, error) {
 
 func (p *PostgresDB) CreateOrder(order *domain.Order) (*domain.Order, error) {
 	orderConverted := &Order{
-		UserID: order.UserID,
-		Items:  order.Items,
-		Status: order.Status,
+		UserID:   order.UserID,
+		Items:    order.Items,
+		Status:   order.Status,
+		Message:  order.Message,
+		Response: order.Response,
 	}
 	p.DB.Create(orderConverted)
 	order.ID = orderConverted.ID
@@ -52,19 +56,23 @@ func (p *PostgresDB) GetOrder(id uint64) (*domain.Order, error) {
 		return nil, err
 	}
 	return &domain.Order{
-		ID:     order.ID,
-		UserID: order.UserID,
-		Items:  order.Items,
-		Status: order.Status,
+		ID:       order.ID,
+		UserID:   order.UserID,
+		Items:    order.Items,
+		Status:   order.Status,
+		Message:  order.Message,
+		Response: order.Response,
 	}, nil
 }
 
 func (p *PostgresDB) UpdateOrder(updatedOrder *domain.Order) error {
 	order := Order{
-		ID:     updatedOrder.ID,
-		UserID: updatedOrder.UserID,
-		Items:  updatedOrder.Items,
-		Status: updatedOrder.Status,
+		ID:       updatedOrder.ID,
+		UserID:   updatedOrder.UserID,
+		Items:    updatedOrder.Items,
+		Status:   updatedOrder.Status,
+		Message:  updatedOrder.Message,
+		Response: updatedOrder.Response,
 	}
 
 	return p.DB.Model(&Order{}).Where("id = ?", updatedOrder.ID).Updates(order).Error
