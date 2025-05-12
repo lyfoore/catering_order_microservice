@@ -1,6 +1,7 @@
 package http
 
 import (
+	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
 	"log"
 )
@@ -26,6 +27,8 @@ func (r *Router) SetupRouter() {
 	r.engine.POST("/orders", r.handler.CreateOrder)
 	r.engine.PATCH("/orders/:id", r.handler.UpdateOrder)
 	r.engine.DELETE("/orders/:id", r.handler.DeleteOrder)
+
+	pprof.Register(r.engine)
 }
 
 func (r *Router) Run(port string) {
