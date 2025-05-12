@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/joho/godotenv"
 	database "github.com/lyfoore/order-service/internal/db"
 	"github.com/lyfoore/order-service/internal/service"
 	"github.com/lyfoore/order-service/internal/transport/gRPC"
@@ -10,6 +11,10 @@ import (
 
 func main() {
 	//mockDB := mock.NewMockDB()
+	err := godotenv.Load("../config/.env")
+	if err != nil {
+		log.Print("Error loading .env file: ", err)
+	}
 	postgresDB, err := database.NewPostgresDB("host=db port=5432 user=postgres password=postgres dbname=orders sslmode=disable")
 	if err != nil {
 		log.Fatal(err)
