@@ -2,6 +2,11 @@
 Microservice for processing CRUD operations with PostgreSQL DB.
 
 # Deployment
+Create /config/.env file with the following variables:
+```.env
+OPENAI_API_KEY=YOUR_OPENAI_KEY
+```
+To run:
 `docker-compose up --build`
 
 # API
