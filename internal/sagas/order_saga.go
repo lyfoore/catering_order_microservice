@@ -23,6 +23,10 @@ func (s *OrderSaga) CreateOrder(order *domain.Order) (*domain.Order, error) {
 		return nil, err
 	}
 
+	if order.Message == "" {
+		return newOrder, nil
+	}
+
 	go s.processAI(newOrder.ID)
 
 	responseOrder := *newOrder
@@ -30,6 +34,7 @@ func (s *OrderSaga) CreateOrder(order *domain.Order) (*domain.Order, error) {
 	if _, err = s.orderService.UpdateOrderService(&responseOrder); err != nil {
 		return nil, err
 	}
+	log.Print(responseOrder)
 	return &responseOrder, nil
 }
 

@@ -51,7 +51,9 @@ func (s *OrderService) UpdateOrderService(updatedOrder *domain.Order) (*domain.O
 	if updatedOrder.Status != "" {
 		existingOrder.Status = updatedOrder.Status
 	}
-
+	if updatedOrder.StatusAI != "" {
+		existingOrder.StatusAI = updatedOrder.StatusAI
+	}
 	if updatedOrder.Response != "" {
 		existingOrder.Response = updatedOrder.Response
 	}
