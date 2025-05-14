@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"github.com/labstack/gommon/log"
 	"github.com/lyfoore/order-service/internal/domain"
 	"github.com/lyfoore/order-service/internal/repository"
 	"github.com/openai/openai-go"
@@ -33,14 +32,6 @@ func (s *OrderService) CreateOrderService(newOrder *domain.Order) (*domain.Order
 	if err != nil {
 		return nil, err
 	}
-
-	go func() {
-		_, err := s.GetResponseFromAI(order)
-		if err != nil {
-			log.Error(err)
-		}
-		log.Print("get response from AI")
-	}()
 
 	return order, nil
 }
@@ -84,7 +75,7 @@ func (s *OrderService) GetResponseFromAI(order *domain.Order) (*domain.Order, er
 		Model: openai.ChatModelGPT4o,
 	})
 	if err != nil {
-		panic(err.Error())
+		return nil, err
 	}
 
 	respondedOrder := *order

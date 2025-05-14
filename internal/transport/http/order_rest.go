@@ -3,6 +3,7 @@ package http
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/lyfoore/order-service/internal/domain"
+	"github.com/lyfoore/order-service/internal/sagas"
 	"github.com/lyfoore/order-service/internal/service"
 	"net/http"
 	"strconv"
@@ -10,11 +11,13 @@ import (
 
 type OrderHandler struct {
 	service *service.OrderService
+	saga    *sagas.OrderSaga
 }
 
-func NewOrderHandler(service *service.OrderService) *OrderHandler {
+func NewOrderHandler(service *service.OrderService, saga *sagas.OrderSaga) *OrderHandler {
 	return &OrderHandler{
 		service: service,
+		saga:    saga,
 	}
 }
 
@@ -61,7 +64,7 @@ func (h *OrderHandler) CreateOrder(ctx *gin.Context) {
 		Message: request.Message,
 	}
 
-	order, err := h.service.CreateOrderService(newOrder)
+	order, err := h.saga.CreateOrder(newOrder)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),

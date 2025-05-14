@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/joho/godotenv"
 	database "github.com/lyfoore/order-service/internal/db"
+	"github.com/lyfoore/order-service/internal/sagas"
 	"github.com/lyfoore/order-service/internal/service"
 	"github.com/lyfoore/order-service/internal/transport/gRPC"
 	"github.com/lyfoore/order-service/internal/transport/http"
@@ -20,7 +21,8 @@ func main() {
 		log.Fatal(err)
 	}
 	orderService := service.NewOrderService(postgresDB)
-	orderHandler := http.NewOrderHandler(orderService)
+	orderSaga := sagas.NewOrderSaga(orderService)
+	orderHandler := http.NewOrderHandler(orderService, orderSaga)
 
 	grpcServer := gRPC.NewOrderServer(orderService)
 	go grpcServer.RunServer()

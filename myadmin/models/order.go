@@ -9,6 +9,7 @@ type Order struct {
 	UserID   uint64        `gorm:"column:user_id"`
 	Items    pq.Int64Array `gorm:"column:items;type:integer[]"`
 	Status   string        `gorm:"column:status"`
+	StatusAI string        `gorm:"column:status_ai"`
 	Message  string        `gorm:"column:message"`
 	Response string        `gorm:"column:response"`
 }

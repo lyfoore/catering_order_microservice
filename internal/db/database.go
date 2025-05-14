@@ -12,6 +12,7 @@ type Order struct {
 	UserID   uint64        `gorm:"column:user_id"`
 	Items    pq.Int64Array `gorm:"column:items;type:integer[]"`
 	Status   string        `gorm:"column:status"`
+	StatusAI string        `gorm:"column:status_ai"`
 	Message  string        `gorm:"column:message"`
 	Response string        `gorm:"column:response"`
 }
@@ -42,6 +43,7 @@ func (p *PostgresDB) CreateOrder(order *domain.Order) (*domain.Order, error) {
 		UserID:   order.UserID,
 		Items:    order.Items,
 		Status:   order.Status,
+		StatusAI: order.StatusAI,
 		Message:  order.Message,
 		Response: order.Response,
 	}
@@ -60,6 +62,7 @@ func (p *PostgresDB) GetOrder(id uint64) (*domain.Order, error) {
 		UserID:   order.UserID,
 		Items:    order.Items,
 		Status:   order.Status,
+		StatusAI: order.StatusAI,
 		Message:  order.Message,
 		Response: order.Response,
 	}, nil
@@ -71,6 +74,7 @@ func (p *PostgresDB) UpdateOrder(updatedOrder *domain.Order) error {
 		UserID:   updatedOrder.UserID,
 		Items:    updatedOrder.Items,
 		Status:   updatedOrder.Status,
+		StatusAI: updatedOrder.StatusAI,
 		Message:  updatedOrder.Message,
 		Response: updatedOrder.Response,
 	}

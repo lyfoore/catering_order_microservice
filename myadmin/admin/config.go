@@ -42,7 +42,7 @@ func setupAdmin() (b *presets.Builder) {
 
 	mb := b.Model(&models.Order{})
 
-	mb.Listing("ID", "UserID", "Items", "Status", "Message", "Response")
+	mb.Listing("ID", "UserID", "Items", "Status", "StatusAI", "Message", "Response")
 	//ListAll("ID", "UserID", "Items", "Status", "CreatedAt", "UpdatedAt")
 
 	eb := mb.Editing()
