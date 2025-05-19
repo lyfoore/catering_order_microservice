@@ -51,7 +51,7 @@ func (s *OrderSaga) processAI(orderID uint64) {
 		return
 	}
 
-	respondedOrder, err := s.orderService.GetResponseFromAI(order)
+	respondedOrder, err := s.orderService.GenerateAIResponseAndUpdateOrder(order)
 	if err != nil {
 		s.handleAIError(orderID, err)
 		return

@@ -1,10 +1,8 @@
 package service
 
 import (
-	"context"
 	"github.com/lyfoore/order-service/internal/domain"
 	"github.com/lyfoore/order-service/internal/repository"
-	"github.com/openai/openai-go"
 )
 
 type OrderService struct {
@@ -68,20 +66,14 @@ func (s *OrderService) DeleteOrderService(id uint64) error {
 	return s.repo.DeleteOrder(id)
 }
 
-func (s *OrderService) GetResponseFromAI(order *domain.Order) (*domain.Order, error) {
-	client := openai.NewClient()
-	chatCompletion, err := client.Chat.Completions.New(context.TODO(), openai.ChatCompletionNewParams{
-		Messages: []openai.ChatCompletionMessageParamUnion{
-			openai.UserMessage(order.Message),
-		},
-		Model: openai.ChatModelGPT4o,
-	})
+func (s *OrderService) GenerateAIResponseAndUpdateOrder(order *domain.Order) (*domain.Order, error) {
+	response, err := GenerateChatCompletion(order.Message)
 	if err != nil {
 		return nil, err
 	}
 
 	respondedOrder := *order
-	respondedOrder.Response = chatCompletion.Choices[0].Message.Content
+	respondedOrder.Response = response
 	err = s.repo.UpdateOrder(&respondedOrder)
 	if err != nil {
 		return nil, err
